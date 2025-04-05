@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order - GrowMart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .tracking-container {
+            max-width: 800px;
+            margin: 8rem auto 2rem;
+            padding: 2rem;
+        }
+
+        .tracking-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .tracking-header h1 {
+            font-size: 3rem;
+            color: var(--black);
+        }
+
+        .tracking-form {
+            background: #fff;
+            padding: 2rem;
+            border-radius: .5rem;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+        }
+
+        .tracking-form input {
+            width: 100%;
+            margin: 1rem 0;
+            padding: 1.2rem;
+            font-size: 1.6rem;
+            border: 1px solid #ddd;
+            border-radius: .5rem;
+        }
+
+        .tracking-status {
+            margin-top: 3rem;
+            display: none;
+        }
+
+        .status-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-top: 4rem;
+        }
+
+        .status-step {
+            text-align: center;
+            position: relative;
+            width: 120px;
+        }
+
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: #999;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-icon.active {
+            background: var(--orange);
+            color: #fff;
+        }
+
+        .step-text {
+            font-size: 1.4rem;
+            color: var(--black);
+        }
+
+        .step-date {
+            font-size: 1.2rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        .status-line {
+            position: absolute;
+            top: 25px;
+            left: 60px;
+            right: 60px;
+            height: 2px;
+            background: #eee;
+            z-index: 0;
+        }
+
+        .status-line-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: var(--orange);
+            transition: width 0.5s ease;
+        }
+
+        .order-details {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: #fff;
+            border-radius: .5rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .order-details h3 {
+            font-size: 2rem;
+            color: var(--black);
+            margin-bottom: 1rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+            font-size: 1.4rem;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .logo-container {
+            padding: 2rem;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: var(--box-shadow);
+        }
+
+        .logo-container .logo {
+            font-size: 2.5rem;
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        .logo-container .logo i {
+            color: var(--orange);
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <a href="index.html" class="logo">
+            <i class="fas fa-shopping-basket"></i> GrowMart
+        </a>
+    </div>
+
+    <div class="tracking-container">
+        <div class="tracking-header">
+            <h1>Track Your Order</h1>
+        </div>
+
+        <div class="tracking-form">
+            <input type="text" id="order-id" placeholder="Enter your Order ID" required>
+            <button class="btn" onclick="trackOrder()">Track Order</button>
+        </div>
+
+        <div class="tracking-status" id="tracking-status">
+            <div class="status-steps">
+                <div class="status-line">
+                    <div class="status-line-progress" id="progress-line"></div>
+                </div>
+                
+                <div class="status-step">
+                    <div class="step-icon" id="step1">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="step-text">Order Placed</div>
+                    <div class="step-date" id="date1"></div>
+                </div>
+
+                <div class="status-step">
+                    <div class="step-icon" id="step2">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="step-text">Confirmed</div>
+                    <div class="step-date" id="date2"></div>
+                </div>
+
+                <div class="status-step">
+                    <div class="step-icon" id="step3">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="step-text">Shipped</div>
+                    <div class="step-date" id="date3"></div>
+                </div>
+
+                <div class="status-step">
+                    <div class="step-icon" id="step4">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="step-text">Delivered</div>
+                    <div class="step-date" id="date4"></div>
+                </div>
+            </div>
+
+            <div class="order-details">
+                <h3>Order Details</h3>
+                <div class="detail-row">
+                    <span>Order ID:</span>
+                    <span id="detail-order-id"></span>
+                </div>
+                <div class="detail-row">
+                    <span>Order Date:</span>
+                    <span id="detail-order-date"></span>
+                </div>
+                <div class="detail-row">
+                    <span>Estimated Delivery:</span>
+                    <span id="detail-delivery-date"></span>
+                </div>
+                <div class="detail-row">
+                    <span>Status:</span>
+                    <span id="detail-status"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock order data (in a real app, this would come from a server)
+        const orders = {
+            'ORD123': {
+                status: 'delivered',
+                orderDate: '2024-03-15',
+                deliveryDate: '2024-03-18',
+                currentStep: 4,
+                timeline: {
+                    placed: '2024-03-15 10:30 AM',
+                    confirmed: '2024-03-15 11:45 AM',
+                    shipped: '2024-03-16 02:30 PM',
+                    delivered: '2024-03-18 03:15 PM'
+                }
+            },
+            'ORD124': {
+                status: 'shipped',
+                orderDate: '2024-03-17',
+                deliveryDate: '2024-03-20',
+                currentStep: 3,
+                timeline: {
+                    placed: '2024-03-17 09:15 AM',
+                    confirmed: '2024-03-17 10:30 AM',
+                    shipped: '2024-03-18 11:45 AM',
+                    delivered: null
+                }
+            }
+        };
+
+        function trackOrder() {
+            const orderId = document.getElementById('order-id').value;
+            const orderData = orders[orderId];
+            const trackingStatus = document.getElementById('tracking-status');
+
+            if (!orderData) {
+                alert('Order not found. Please check your Order ID.');
+                return;
+            }
+
+            // Show tracking status
+            trackingStatus.style.display = 'block';
+
+            // Update progress line
+            const progressLine = document.getElementById('progress-line');
+            progressLine.style.width = ((orderData.currentStep - 1) * 33.33) + '%';
+
+            // Update step icons
+            for (let i = 1; i <= 4; i++) {
+                const step = document.getElementById(`step${i}`);
+                const date = document.getElementById(`date${i}`);
+                
+                if (i <= orderData.currentStep) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            }
+
+            // Update dates
+            document.getElementById('date1').textContent = formatDate(orderData.timeline.placed);
+            document.getElementById('date2').textContent = formatDate(orderData.timeline.confirmed);
+            document.getElementById('date3').textContent = formatDate(orderData.timeline.shipped);
+            document.getElementById('date4').textContent = formatDate(orderData.timeline.delivered);
+
+            // Update order details
+            document.getElementById('detail-order-id').textContent = orderId;
+            document.getElementById('detail-order-date').textContent = formatDate(orderData.orderDate);
+            document.getElementById('detail-delivery-date').textContent = formatDate(orderData.deliveryDate);
+            document.getElementById('detail-status').textContent = 
+                orderData.status.charAt(0).toUpperCase() + orderData.status.slice(1);
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'Pending';
+            return new Date(dateString).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+    </script>
+</body>
+</html> 

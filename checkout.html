@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - GrowMart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .checkout-container {
+            max-width: 1200px;
+            margin: 8rem auto 2rem;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .checkout-form {
+            background: #fff;
+            padding: 2rem;
+            border-radius: .5rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .checkout-summary {
+            background: #fff;
+            padding: 2rem;
+            border-radius: .5rem;
+            box-shadow: var(--box-shadow);
+            height: fit-content;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 1.6rem;
+            margin-bottom: .5rem;
+            color: var(--black);
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.4rem;
+            border: 1px solid #ddd;
+            border-radius: .5rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: var(--black);
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            margin-right: 1rem;
+        }
+
+        .item-details h4 {
+            font-size: 1.4rem;
+            color: var(--black);
+        }
+
+        .item-details p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            font-size: 1.4rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .summary-row.total {
+            font-weight: bold;
+            font-size: 1.6rem;
+            border-top: 2px solid #ddd;
+            margin-top: 1rem;
+        }
+
+        .btn-checkout {
+            width: 100%;
+            padding: 1.2rem;
+            font-size: 1.6rem;
+            background: var(--orange);
+            color: #fff;
+            border: none;
+            border-radius: .5rem;
+            cursor: pointer;
+            margin-top: 2rem;
+        }
+
+        .btn-checkout:hover {
+            background: var(--black);
+        }
+
+        .logo-container {
+            padding: 2rem;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: var(--box-shadow);
+        }
+
+        .logo-container .logo {
+            font-size: 2.5rem;
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        .logo-container .logo i {
+            color: var(--orange);
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <a href="index.html" class="logo">
+            <i class="fas fa-shopping-basket"></i> GrowMart
+        </a>
+    </div>
+
+    <div class="checkout-container">
+        <div class="checkout-form">
+            <h2 class="section-title">Shipping Information</h2>
+            <form id="shipping-form">
+                <div class="form-group">
+                    <label for="fullname">Full Name</label>
+                    <input type="text" id="fullname" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" required>
+                </div>
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" required>
+                </div>
+                <div class="form-group">
+                    <label for="state">State</label>
+                    <input type="text" id="state" required>
+                </div>
+                <div class="form-group">
+                    <label for="pincode">PIN Code</label>
+                    <input type="text" id="pincode" required>
+                </div>
+
+                <h2 class="section-title">Payment Method</h2>
+                <div class="form-group">
+                    <label for="payment">Select Payment Method</label>
+                    <select id="payment" required>
+                        <option value="">Choose payment method</option>
+                        <option value="cod">Cash on Delivery</option>
+                        <option value="card">Credit/Debit Card</option>
+                        <option value="upi">UPI</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        <div class="checkout-summary">
+            <h2 class="section-title">Order Summary</h2>
+            <div id="cart-items">
+                <!-- Cart items will be displayed here -->
+            </div>
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span id="subtotal">Rs 0/-</span>
+            </div>
+            <div class="summary-row">
+                <span>Shipping</span>
+                <span>Rs 40/-</span>
+            </div>
+            <div class="summary-row total">
+                <span>Total</span>
+                <span id="total">Rs 0/-</span>
+            </div>
+            <button class="btn-checkout" onclick="placeOrder()">Place Order</button>
+        </div>
+    </div>
+
+    <script>
+        // Load cart items from localStorage
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const cartContainer = document.getElementById('cart-items');
+        let subtotal = 0;
+
+        // Display cart items
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            subtotal += itemTotal;
+
+            cartContainer.innerHTML += `
+                <div class="cart-item">
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="item-details">
+                        <h4>${item.name}</h4>
+                        <p>Rs ${item.price}/- × ${item.quantity}</p>
+                    </div>
+                </div>
+            `;
+        });
+
+        // Update totals
+        const shipping = 40;
+        document.getElementById('subtotal').textContent = `Rs ${subtotal}/-`;
+        document.getElementById('total').textContent = `Rs ${subtotal + shipping}/-`;
+
+        function placeOrder() {
+            const form = document.getElementById('shipping-form');
+            if (!form.checkValidity()) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            const orderDetails = {
+                orderId: 'ORD' + Date.now(),
+                items: cart,
+                shipping: {
+                    name: document.getElementById('fullname').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    address: document.getElementById('address').value,
+                    city: document.getElementById('city').value,
+                    state: document.getElementById('state').value,
+                    pincode: document.getElementById('pincode').value
+                },
+                payment: document.getElementById('payment').value,
+                total: subtotal + shipping,
+                status: 'placed',
+                orderDate: new Date().toISOString()
+            };
+
+            // Save order to localStorage
+            const orders = JSON.parse(localStorage.getItem('orders')) || {};
+            orders[orderDetails.orderId] = orderDetails;
+            localStorage.setItem('orders', JSON.stringify(orders));
+
+            // Clear cart
+            localStorage.removeItem('cart');
+
+            // Show success message and redirect
+            alert(`Order placed successfully!\nYour order ID is: ${orderDetails.orderId}`);
+            window.location.href = 'order-tracking.html?orderId=' + orderDetails.orderId;
+        }
+    </script>
+</body>
+</html> 

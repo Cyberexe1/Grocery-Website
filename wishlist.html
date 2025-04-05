@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist - GrowMart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .wishlist-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .wishlist-header {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 6rem;
+        }
+
+        .wishlist-header h1 {
+            font-size: 3rem;
+            color: var(--black);
+        }
+
+        .wishlist-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+            gap: 1.5rem;
+        }
+
+        .wishlist-item {
+            padding: 2rem;
+            background: #fff;
+            border-radius: .5rem;
+            box-shadow: var(--box-shadow);
+            position: relative;
+            text-align: center;
+        }
+
+        .wishlist-item img {
+            height: 15rem;
+        }
+
+        .wishlist-item h3 {
+            font-size: 2rem;
+            color: var(--black);
+            padding: 1rem 0;
+        }
+
+        .wishlist-item .price {
+            font-size: 1.7rem;
+            color: var(--black);
+            padding: .5rem 0;
+        }
+
+        .wishlist-item .btn {
+            margin: 0.5rem;
+        }
+
+        .empty-wishlist {
+            text-align: center;
+            font-size: 2rem;
+            color: var(--black);
+            padding: 2rem;
+        }
+
+        .logo-container {
+            padding: 2rem;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: var(--box-shadow);
+        }
+
+        .logo-container .logo {
+            font-size: 2.5rem;
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        .logo-container .logo i {
+            color: var(--orange);
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <a href="index.html" class="logo">
+            <i class="fas fa-shopping-basket"></i> GrowMart
+        </a>
+    </div>
+
+    <div class="wishlist-container">
+        <div class="wishlist-header">
+            <h1>My Wishlist</h1>
+        </div>
+        <div class="wishlist-items">
+            <!-- Wishlist items will be dynamically added here -->
+        </div>
+    </div>
+
+    <script>
+        // Load wishlist items
+        const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        const wishlistContainer = document.querySelector('.wishlist-items');
+
+        if (wishlist.length === 0) {
+            wishlistContainer.innerHTML = `
+                <div class="empty-wishlist">
+                    <p>Your wishlist is empty</p>
+                    <a href="index.html" class="btn">Continue Shopping</a>
+                </div>
+            `;
+        } else {
+            wishlist.forEach(item => {
+                wishlistContainer.innerHTML += `
+                    <div class="wishlist-item">
+                        <img src="${item.image}" alt="${item.name}">
+                        <h3>${item.name}</h3>
+                        <div class="price">Rs ${item.price}/-</div>
+                        <a href="#" class="btn" onclick="moveToCart('${item.name}')">Move to Cart</a>
+                        <a href="#" class="btn" onclick="removeFromWishlist('${item.name}')">Remove</a>
+                    </div>
+                `;
+            });
+        }
+
+        function removeFromWishlist(name) {
+            const updatedWishlist = wishlist.filter(item => item.name !== name);
+            localStorage.setItem('wishlist', JSON.stringify(updatedWishlist));
+            location.reload();
+        }
+
+        function moveToCart(name) {
+            const item = wishlist.find(item => item.name === name);
+            if (item) {
+                // Store cart data in localStorage
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                cart.push({...item, quantity: 1});
+                localStorage.setItem('cart', JSON.stringify(cart));
+                
+                // Remove from wishlist
+                removeFromWishlist(name);
+                
+                alert('Item moved to cart!');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html> 
